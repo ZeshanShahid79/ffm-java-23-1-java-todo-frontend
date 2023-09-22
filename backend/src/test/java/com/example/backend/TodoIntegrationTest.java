@@ -61,7 +61,7 @@ class TodoIntegrationTest {
                 )
 
                 //THEN
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().json("""
                         {
                         "description": "tidy up",
@@ -84,7 +84,7 @@ class TodoIntegrationTest {
                                 }
                                 """)
                 )
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
@@ -140,13 +140,14 @@ class TodoIntegrationTest {
                         """))
                 .andExpect(jsonPath("$.id").isNotEmpty());
     }
+
     @Test
     @DirtiesContext
     void deleteTodoById() throws Exception {
         //GIVEN
         todoRepository.save(new Todo("1", "tidy up", TodoStatus.OPEN));
         //WHEN
-         mockMvc.perform(MockMvcRequestBuilders.delete("/api/todo/1")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/todo/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -155,8 +156,27 @@ class TodoIntegrationTest {
                                 }
                                 """)
                 )
-         //THEN
-                .andExpect(status().isOk());
+                //THEN
+                .andExpect(status().isNoContent());
+
+    }
+
+    @Test
+    @DirtiesContext
+    void findTodoByIdAndExpectTodoNotFound() throws Exception {
+        //GIVEN
+        String id = "123";
+
+        //WHEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/todo/" + id))
+
+                //THEN
+                .andExpect(status().isNotFound())
+                .andExpect(content().json("""
+                        {
+                         "message": "Todo with id: 123 not found"
+                        }
+                        """));
 
     }
 }

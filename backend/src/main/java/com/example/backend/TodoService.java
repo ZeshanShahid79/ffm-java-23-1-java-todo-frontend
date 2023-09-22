@@ -23,10 +23,10 @@ public class TodoService {
     }
 
     public Todo getTodoById(String id) {
-        return todoRepository.findById(id).orElseThrow(() ->  new NoSuchElementException());
+        return todoRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Todo with id: " + id + " not found"));
     }
 
-    public Todo updateTodo(String id,TodoWithoutId todoWithoutId) {
+    public Todo updateTodo(String id, TodoWithoutId todoWithoutId) {
         Todo updateTodo = new Todo(id, todoWithoutId.description(), todoWithoutId.status());
         return todoRepository.save(updateTodo);
     }

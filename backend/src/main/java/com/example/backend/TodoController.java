@@ -1,10 +1,11 @@
 package com.example.backend;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/todo")
@@ -23,6 +24,7 @@ public class TodoController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     Todo addTodo(@RequestBody TodoWithoutId todoWithoutId) {
         return todoService.addTodo(todoWithoutId);
     }
@@ -33,6 +35,7 @@ public class TodoController {
     }
 
     @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteTodo(@PathVariable String id) {
         todoService.deleteTodo(id);
     }
